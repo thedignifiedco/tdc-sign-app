@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>TDC App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./resources/css/base.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/3.0.0/superagent.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/6.0.0/validator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/adobe-sign-sdk/1.1.0/adobe-sign-sdk.min.js"></script>
+    <script src="./utils/Errors.js"></script>
+    <script src="./resources/js/Config.js"></script>
+    <script src="./utils/Constants.js"></script>
+    <script src="./utils/ApiUtils.js"></script>
+    <script src="./utils/TransientDocumentUtils.js"></script>
+    <script src="./utils/AgreementUtils.js"></script>
+    <script src="./utils/WidgetUtils.js"></script>
+
+    <script type="text/javascript">
+        var Errors = AdobeSignSdk.Errors;
+        var Constants = AdobeSignSdk.Constants;
+        var ApiUtils = AdobeSignSdk.ApiUtils;
+        var TransientDocumentUtils = AdobeSignSdk.TransientDocumentUtils;
+        var AgreementUtils = AdobeSignSdk.AgreementUtils;
+        var WidgetUtils = AdobeSignSdk.WidgetUtils;
+
+        function SendAgreementUsingTransientDocument() {
+
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(SendAgreementUsingTransientDocument.name);
+
+            var file = document.getElementById('transientdocument').files[0];
+
+            ApiUtils.info("Creating transient document using input file");
+
+            //Make API call to create transient document.
+            TransientDocumentUtils.createTransientDocument(Constants.INPUT_FILE_NAME,
+                    file)
+                .then(function(transientDocumentResponse) {
+
+                    //Get the id of the transient document.
+                    var transientDocumentId = transientDocumentResponse.getTransientDocumentId();
+
+                    //List containing email ids of recipients.
+                    var recipientSetEmailList = [];
+                    recipientSetEmailList.push($('#email').val());
+                
+                    var agreementName = [];
+                    agreementName.push($('#agreement_name').val());
+
+                    ApiUtils.info("Sending agreement using transient document");
+
+                    //Create agreement using the transient document.
+                    return AgreementUtils.createAgreement(recipientSetEmailList,
+                        transientDocumentId,
+                        AgreementUtils.DocumentIdentifierType.TRANSIENT_DOCUMENT_ID,
+                        agreementName);
+                })
+                .then(function(agreementCreationResponse) {
+                    ApiUtils.info("Getting agreement info for sent agreement");
+
+                    //Get agreement info using the agreement id.
+                    return AgreementUtils.getAgreementInfo(agreementCreationResponse.getAgreementId());
+                })
+                .then(function(agreementInfo) {
+
+                    //Display agreement details
+                    ApiUtils.info("Agreement ID = " + agreementInfo.getAgreementId());
+                    ApiUtils.info("Agreement Name = " + agreementInfo.getName());
+                    ApiUtils.info("Agreement Status = " + agreementInfo.getStatus());
+                    $('#agreement_id').val(agreementInfo.getAgreementId());
+                })
+                .catch(function(apiError) {
+                    ApiUtils.logError(Errors.SEND_AGREEMENT_USING_TRANSIENT_DOCUMENT, apiError);
+                });
+
+        }
+
+        function GetSigningUrl() {
+
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(GetSigningUrl.name);
+
+            var agreementId = $('#agreement_id').val();
+
+            ApiUtils.info("Getting signing url for agreement");
+
+            //Get agreement id.
+            AgreementUtils.getSigningUrl(agreementId)
+
+                .then(function(signingUrlSetInfos) {
+                    for (var i = 0; i < signingUrlSetInfos.length; i++) {
+                        var signingUrls = signingUrlSetInfos[i].getSigningUrls();
+                        for (var j = 0; j < signingUrls.length; j++) {
+                            var signingUrl = signingUrls[j];
+                            ApiUtils.info("Signing url: " + signingUrl.getEsignUrl());
+                            ApiUtils.info("         ");
+                            ApiUtils.info("Loading eSign page");
+                            var url = signingUrl.getEsignUrl() + "&" + "noChrome=true";
+                            $("#sign").prop('src', url);
+                            $("#sign").removeClass("hide");
+                            $("#sign").location.reload(true);
+                        }
+                    }
+                })
+                .catch(function(apiError) {
+                    ApiUtils.logAndThrowError(Errors.GET_SIGNING_URL, apiError);
+                });
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="col-md-12">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse" id="navbarNav">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="./index.html">Send Agreement</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./status.html">Check Status</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" id="contact-form">
+                    <h1>Send & Sign Agreement</h1>
+                    <p>This web app demonstrates how to send a new agreement using Adobe Sign API. This app will exectue the following tasks;</p>
+                    <ul>
+                        <li>Create a transient document and get transient document id.</li>
+                        <li>Get agreement info and create an agreement using the transient document.</li>
+                        <li>Send the agreement.</li>
+                        <li>Display agreement details.</li>
+                        <li>Sign agreement instantly.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Send Agreement</h3>
+                </div>
+                <div class="col-md-3">
+                    <form id="enquiry" action="" method="post">
+                        <!--
+					<div class="form-group">
+						<label for="full_name">Client Full name</label>
+						<input type="text" class="form-control" id="full_name" name="full_name" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+					</div>
+                        <div class="form-group">
+                            <label for="validationCustom02">Lawyer Email</label>
+                            <input type="email" class="form-control" id="email2" name="email2" data-validation="email" data-validation-length="min4" data-validation-error-msg="Enter a valid email" required>
+                        </div>
+                    <div class="form-group">
+						<label for="validationCustom01">Client Address</label>
+						<input type="text" class="form-control" id="client_address" name="client_address" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+					</div>
+					<div class="form-group">
+						<label for="validationCustom01">Provider Name</label>
+						<input type="text" class="form-control" id="provider_name" name="provider_name" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+					</div>
+					<div class="form-group">
+						<label for="validationCustom01">Provider Address</label>
+						<input type="text" class="form-control" id="address" name="address" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+					</div>
+					<div class="form-group">
+						<label for="validationCustom01">Policy Number/Reference</label>
+						<input type="text" class="form-control" id="ref_no" name="ref_no" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+					</div>
+                    -->
+
+                        <div class="form-group">
+                            <label for="validationCustom02">Client Email</label>
+                            <input type="email" class="form-control" id="email" name="email" data-validation="email" data-validation-length="min4" data-validation-error-msg="Enter a valid email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="validationCustom01">Agreement Name</label>
+                            <input type="text" class="form-control" id="agreement_name" name="agreement_name" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" class="custom-file-input" id="transientdocument" />
+                            <label class="custom-file-label" for="transientdocument">Choose document</label>
+                            <script>
+                                $('#transientdocument').on('change', function() {
+                                    //get the file name
+                                    var fileName = $(this).val();
+                                    //replace the "Choose a file" label
+                                    $(this).next('.custom-file-label').html(fileName);
+                                })
+
+                            </script>
+                        </div>
+                    </form>
+                    <button class="btn btn-default" onclick="SendAgreementUsingTransientDocument()">Send</button>
+                </div>
+
+                <div class="col-md-9">
+                    <div id="result"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <br>
+                    <br>
+                    <h3>Sign Agreement</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <form id="enquiry" action="" method="post">
+                        <div class="form-group">
+                            <label for="agreement_id">Agreement ID</label>
+                            <input type="text" class="form-control" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+                        </div>
+                    </form>
+                    <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
+                </div>
+
+                <div class="col-md-9">
+                    <iframe class="hide" id="sign" src="" width="100%" height="auto" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
