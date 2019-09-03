@@ -93,7 +93,6 @@
         }
 
         function GetStatusOfAgreements() {
-
             /**
              * Entry point for this sample client program.
              */
@@ -101,7 +100,8 @@
 
             // Set the number of agreements for which status is to be logged.
             var agreementCountLimit = Constants.AGREEMENT_COUNT_LIMIT;
-
+            
+            $("#loadingagreements").removeClass("hide");
             ApiUtils.info("Setting BaseUri");
 
             BaseUriUtils.setBaseUri()
@@ -129,6 +129,18 @@
                         ApiUtils.info("         ");
 
                         agreementCountLimit--;
+                        
+                        var html = '';
+                        $.each(userAgreementList,function(i, item){
+                            html +='<tr>';
+                            html +='<td>'+ userAgreementList[i].getName() + '</td>';
+                            html +='<td>'+ userAgreementList[i].getStatus() + '</td>';
+                            html +='<td>'+ userAgreementList[i].getAgreementId() + '</td>';
+                            html +='</tr>';
+                          });
+                        $('#agreementstable tbody').html(html);
+                        $("#loadingagreements").addClass("hide");
+                        $("#agreementstable").removeClass("hide");
                     }
                 })
                 .catch(function(apiError) {
@@ -224,8 +236,8 @@
     <div class="header">
         <div class="col-md-12">
             <div class="container">
-                <h1>Adobe Sign</h1>
                 <nav class="navbar navbar-expand-lg navbar-light">
+                    <h1 class="logo">Adobe Sign</h1>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -235,7 +247,7 @@
                                 <a class="nav-link" href="./index.html">Send Agreement</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./status.html">Check Status</a>
+                                <a class="nav-link" href="./index.html#CheckAgreeement">Check Status</a>
                             </li>
                         </ul>
                     </div>
@@ -320,6 +332,25 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <button class="btn btn-default" onclick="GetStatusOfAgreements()">Get Status of Agreements</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="myagreements">
+                                        <div class="hide fade-in" id="loadingagreements">
+                                            <span class="pendingmessage">Loading agreements</span>
+                                        </div>
+                                        <table class="table hide" id="agreementstable">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">ID</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
