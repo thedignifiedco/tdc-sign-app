@@ -6,6 +6,7 @@ body {
     position: relative;
     background: #161616;
 	width: 100%;
+    padding: 10px 0;
     z-index: 10;
 }
 
@@ -84,14 +85,14 @@ h1 {
 
 h1.logo {
     display: block;
-    background-image: url("../img/sample-logo.png");
+    background-image: url("../img/logo.png");
     background-size: contain;
     background-repeat: no-repeat;
-    width: 180px;
-    height: 180px;
+    width: 90px;
+    height: 90px;
     font-size: 0;
     line-height: 0;
-    margin: 20px auto;
+    margin: 0 auto;
 }
 
 h2 {
