@@ -82,6 +82,18 @@ h1 {
     padding: 0;
 }
 
+h1.logo {
+    display: block;
+    background-image: url("../img/sample-logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 180px;
+    height: 180px;
+    font-size: 0;
+    line-height: 0;
+    margin: 20px auto;
+}
+
 h2 {
 	font-family: Roboto, sans-serif;
 	font-size: 1.2em;
@@ -309,8 +321,18 @@ input[type=checkbox]:not(:checked):before {
     margin-top: 135px;
 }
 
+#loadingagreements .pendingmessage {
+    margin-top: 0;
+}
+
 .successmessage {
     color: #40aafb;
+}
+
+#myagreements {
+    height: 400px;
+    padding-top: 20px;
+    overflow: scroll;
 }
 
 #result {
