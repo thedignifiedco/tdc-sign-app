@@ -209,67 +209,31 @@ input[type=checkbox]:not(:checked):before {
 
 .btn-default {
     position: relative;
-    display: inline-block;
-    min-width: 140px;
+    display: block;
+    min-width: 150px;
     max-width: 100%;
     background: #ffb81c;
     font-size: 15px;
     font-weight: 400;
     line-height: 1.5;
-    text-align: left;
+    text-align: center;
     color: #262626;
     border: 1px solid #ffb81c;
     border-right: 0;
-	border-radius: 0;
+    border-radius: 20px;
     padding: 10px 10px;
     margin-bottom: 20px;
-    margin-right: 45px;
+    margin-right: auto;
+    margin-left: auto;
     cursor: pointer;
     z-index: 1;
 	transition: none;
 }
 
-.btn-default:after,
-.btn-default:before {
-    content: "";
-    position: absolute;
-    display: block;
-}
-
-.btn-default:before {
-    top: 50%;
-    right: 4px;
-    width: 0;
-    height: 0;
-    border: 5px solid transparent;
-    border-left: 5px solid #000;
-    margin-top: -5px;
-}
-
-.btn-default:after {
-    top: -1px;
-    right: -1px;
-    bottom: 0;
-    width: 40px;
-    background: #ffb81c;
-    border: 1px solid #ffb81c;
-    border-left: 0;
-    border-bottom: 0;
-    -webkit-transform-origin: bottom left;
-    -moz-transform-origin: bottom left;
-    transform-origin: bottom left;
-    -webkit-transform: skew(-25deg);
-    -ms-transform: skew(-25deg);
-    transform: skew(-25deg);
-    z-index: -1;
-}
-
 .btn-default:hover,
 .btn-default:hover:after,
 .btn-default:active:hover,
-.btn-default:active:hover:after,
-.btn-default:active:focus,
-.btn-default:active:focus:after {
+.btn-default:active:focus {
     background: #ffd069;
 	border-color: #ffd069;
 }
@@ -283,6 +247,33 @@ input[type=checkbox]:not(:checked):before {
 .btn:disabled {
     opacity: .5;
     cursor: not-allowed;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #ffb81c;
+}
+
+.nav-tabs .nav-link.active {
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #ffb81c #ffb81c #fff;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #000000;
+    background-color: #ffb81c;
+    border-color: #ffb81c #ffb81c #fff;
+}
+
+.nav-tabs .nav-link,
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    border-bottom: 0;
+}
+
+#myTabContent {
+    padding: 20px 0;
+	margin-bottom: 20px;
 }
 
 #result {
