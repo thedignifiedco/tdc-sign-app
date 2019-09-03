@@ -45,7 +45,7 @@
     "groupName" : "SampleGroup",
 
     //Prefix for the agreement name which will be added while creating agreement name at runtime using timestamp
-    "agreementName" : "",
+    "agreementName" : "null",
 
     //Prefix for the widget name which will be added while creating widget name at runtime using timestamp
     "widgetName" : "DignifiedWidget",

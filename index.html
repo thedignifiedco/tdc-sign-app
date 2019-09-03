@@ -35,6 +35,9 @@
 
         function SendAgreementUsingTransientDocument() {
 
+            $("#sendform").addClass("hide");
+            $("#sending").removeClass("hide");
+
             /**
              * Entry point for this sample client program.
              */
@@ -79,6 +82,8 @@
                     ApiUtils.info("Agreement ID = " + agreementInfo.getAgreementId());
                     ApiUtils.info("Agreement Name = " + agreementInfo.getName());
                     ApiUtils.info("Agreement Status = " + agreementInfo.getStatus());
+                    $("#sending").addClass("hide");
+                    $("#sendresult").removeClass("hide");
                     $('#agreement_id').val(agreementInfo.getAgreementId());
                 })
                 .catch(function(apiError) {
@@ -154,9 +159,8 @@
                             ApiUtils.info("         ");
                             ApiUtils.info("Loading eSign page");
                             var url = signingUrl.getEsignUrl() + "&" + "noChrome=true";
-                            $("#sign").prop('src', url);
+                            $("#sign").attr('src', url);
                             $("#sign").removeClass("hide");
-                            $("#sign").location.reload(true);
                         }
                     }
                 })
@@ -220,6 +224,7 @@
     <div class="header">
         <div class="col-md-12">
             <div class="container">
+                <h1>Adobe Sign</h1>
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -242,20 +247,20 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12" id="contact-form">
-                    <h1>Send & Sign Agreement</h1>
+                    <h1>Send & Sign Agreements</h1>
                     <p>This web app demonstrates how to send a new agreement using Adobe Sign API. This app will exectue the following tasks;</p>
                     <ul>
                         <li>Create a transient document and get transient document id.</li>
                         <li>Get agreement info and create an agreement using the transient document.</li>
                         <li>Send the agreement.</li>
                         <li>Display agreement details.</li>
-                        <li>Sign agreement instantly.</li>
+                        <li>Get signing url for instant signing.</li>
                     </ul>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" id="appnav">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="SendAgreement-tab" data-toggle="tab" href="#SendAgreement" role="tab" aria-controls="SendAgreement" aria-selected="true">Send</a>
@@ -266,22 +271,25 @@
                         <li class="nav-item">
                             <a class="nav-link" id="SignAgreement-tab" data-toggle="tab" href="#SignAgreement" role="tab" aria-controls="SignAgreement" aria-selected="false">Sign & Download</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="console-tab" data-toggle="tab" href="#consoletab" role="tab" aria-controls="consoletab" aria-selected="false">Console</a>
+                        </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="SendAgreement" role="tabpanel" aria-labelledby="SendAgreement-tab">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="sendform">
                                     <form id="enquiry" action="" method="post">
                                         <div class="form-row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="validationCustom02">Client Email</label>
                                                 <input type="email" class="form-control" id="email" name="email" data-validation="email" data-validation-length="min4" data-validation-error-msg="Enter a valid email" required>
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="validationCustom01">Agreement Name</label>
                                                 <input type="text" class="form-control" id="agreement_name" name="agreement_name" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <input type="file" class="custom-file-input" id="transientdocument" />
                                                 <label class="custom-file-label" for="transientdocument">Choose document</label>
                                                 <script>
@@ -293,11 +301,18 @@
                                                     })
                                                 </script>
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <button class="btn btn-default" onclick="SendAgreementUsingTransientDocument()">Send</button>
-                                            </div>
                                         </div>
                                     </form>
+                                    <button class="btn btn-default" onclick="SendAgreementUsingTransientDocument()">Send</button>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="hide fade-in" id="sending">
+                                        <span class="pendingmessage">Creating agreement</span>
+                                    </div>
+                                    <div class="hide fade-in" id="sendresult">
+                                        <span class="successmessage">Out for signature</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -313,33 +328,40 @@
                                 <div class="col-md-12">
                                     <form id="enquiry" action="" method="post">
                                         <div class="form-row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="agreement_id">Agreement ID</label>
                                                 <input type="text" class="form-control" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <button class="btn btn-default" onclick="DownloadDocumentsOfAgreement()">Download</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-default" onclick="DownloadDocumentsOfAgreement()">Download</button>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <iframe class="hide" id="sign" src="" width="100%" height="auto" frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="consoletab" role="tabpanel" aria-labelledby="console-tab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="result"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <h3>Console</h3>
-                    <div id="result"></div>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>
