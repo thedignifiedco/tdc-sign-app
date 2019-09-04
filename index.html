@@ -135,12 +135,20 @@
                             html +='<tr>';
                             html +='<td>'+ userAgreementList[i].getName() + '</td>';
                             html +='<td>'+ userAgreementList[i].getStatus() + '</td>';
-                            html +='<td>'+ userAgreementList[i].getAgreementId() + '</td>';
+                            html +='<td class="allowCopy"><input readonly type="text" value="'+ userAgreementList[i].getAgreementId() + '"></td>';
                             html +='</tr>';
                           });
                         $('#agreementstable tbody').html(html);
                         $("#loadingagreements").addClass("hide");
                         $("#agreementstable").removeClass("hide");
+                        $(function() {
+                            $('td.allowCopy input').click(function() {
+                            $(this).focus();
+                            $(this).select();
+                            document.execCommand('copy');
+                            $(".copied").text("Copied to clipboard").show().fadeOut(1200);
+                            });
+                        });
                     }
                 })
                 .catch(function(apiError) {
@@ -321,11 +329,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div id="myagreements">
-                                        <div class="hide fade-in" id="loadingagreements">
-                                            <span class="pendingmessage">Loading agreements</span>
-                                        </div>
-                                        <table class="table hide" id="agreementstable">
+                                    <div class="hide fade-in" id="loadingagreements">
+                                        <span class="pendingmessage">Loading agreements</span>
+                                    </div>
+                                    <span class="copied"></span>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover hide" id="agreementstable">
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th scope="col">Name</th>
