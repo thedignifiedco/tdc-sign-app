@@ -330,10 +330,17 @@ input[type=checkbox]:not(:checked):before {
     color: #40aafb;
 }
 
-#myagreements {
+.table-responsive {
     height: 400px;
-    padding-top: 20px;
-    overflow: scroll;
+    overflow-y: scroll;
+}
+
+span.copied {
+    display: block;
+    text-align: center;
+    color: #939598;
+    margin: 10px 0;
+	font-size: 18px;
 }
 
 #result {
