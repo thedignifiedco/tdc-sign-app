@@ -147,6 +147,7 @@
                             $(this).select();
                             document.execCommand('copy');
                             $(".copied").text("Copied to clipboard").show().fadeOut(1200);
+                            $("#agreement_id").val($(this).val());
                             });
                         });
                     }
@@ -355,7 +356,7 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
                                                 <label for="agreement_id">Agreement ID</label>
-                                                <input type="text" class="form-control" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+                                                <input type="text" class="form-control paste" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
                                             </div>
                                         </div>
                                     </form>
