@@ -338,7 +338,7 @@ input[type=checkbox]:not(:checked):before {
     position: absolute;
     top: 0;
     width: 270px;
-    height: 500px;
+    height: 600px;
     background: #e8ecef;
     opacity: 0;
     padding: 20px;
@@ -392,7 +392,7 @@ input[type=checkbox]:not(:checked):before {
 
 .table-responsive {
     position: relative;
-    height: 500px;
+    height: 600px;
     overflow-y: scroll;
 }
 
@@ -434,7 +434,7 @@ span.copied {
 
 #sign {
     width: 100%;
-    min-height: 600px;
+    min-height: 500px;
 }
 
 .hide {

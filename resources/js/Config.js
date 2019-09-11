@@ -66,7 +66,7 @@
     "inputFormFieldFileName" : "Generic LOA.pdf",
 
     //Name of the sample document to be used in creating a transient document
-    "inputFileName" : "Generic LOA - signed.pdf",
+    "inputFileName" : "null",
 
     //Path structure of directory containing resource files like Sample.pdf, DocumentWithFormFields.pdf, etc
     "requestPath" : "resources",
