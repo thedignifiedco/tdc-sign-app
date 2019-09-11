@@ -51,11 +51,14 @@
             ApiUtils.configureProperty(SendAgreementUsingTransientDocument.name);
 
             var file = document.getElementById('transientdocument').files[0];
+            var fileName = document.getElementById('transientdocument').files[0].name;
 
             ApiUtils.info("Creating transient document using input file");
+            
+            
 
             //Make API call to create transient document.
-            TransientDocumentUtils.createTransientDocument(Constants.INPUT_FILE_NAME,
+            TransientDocumentUtils.createTransientDocument(fileName,
                     file)
                 .then(function(transientDocumentResponse) {
 
@@ -234,7 +237,7 @@
                             .then(function(docStream) {
 
                                 //Generate a running file name for storing locally.
-                                var fileName = document.getName() + "_" + Date.now().toString() + ".pdf";
+                                var fileName = document.getName() + "_signed_" + ".pdf";
 
                                 var type = "application/pdf";
 
