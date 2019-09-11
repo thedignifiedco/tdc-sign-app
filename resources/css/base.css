@@ -405,7 +405,7 @@ input[type=checkbox]:not(:checked):before {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 160%;
     height: 40px;
     opacity: 0;
     cursor: pointer;
