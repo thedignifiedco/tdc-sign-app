@@ -24,7 +24,7 @@
   var Config = {
 
     //Access token to allow  the user to authorize API access. It can be generated from  the link 'https://secure.echosign.com/public/static/oauthDoc.jsp'. It must have scopes required by the corresponding samples to grant the API different levels of access to data on behalf of the end user
-    "accessToken" : "3AAABLblqZhBuU-sFaqmFufW04g5JhmCubCrFCRQE-KbqtMTyi0FsIkbUIGNfvdRBSPZ2dVjq1x8h756rMYr5P_rQWnWEaIKG",
+    "accessToken" : "3AAABLblqZhCCRMQJ8OBCTTH8v37Ystw2lhM0bAU0m2VMxKMp9QnQfArE-uRygpDyM-dceL5BWF2viC1wcwonb3FW6uzi9JO1",
 
     //First name of the user which will be passed while creating new user
     "userFirstName" : "Dignified",

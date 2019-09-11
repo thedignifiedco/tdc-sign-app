@@ -2,9 +2,16 @@
 <html lang="en">
 
 <head>
-    <title>TDC App</title>
+    <title>Adobe Sign App</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#161616">
+    <link rel="apple-touch-icon" sizes="180x180" href="./resources/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./resources/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./resources/img/favicon-16x16.png">
+    <link rel="manifest" href="./resources/img/site.webmanifest">
+    <link rel="mask-icon" href="./resources/img/safari-pinned-tab.svg" color="#5bbad5">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./resources/css/base.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -133,9 +140,8 @@
                         var html = '';
                         $.each(userAgreementList,function(i, item){
                             html +='<tr>';
-                            html +='<td>'+ userAgreementList[i].getName() + '</td>';
+                            html +='<td class="allowCopy">'+ userAgreementList[i].getName() + '<br><input readonly type="text" value="'+ userAgreementList[i].getAgreementId() + '"></td>';
                             html +='<td>'+ userAgreementList[i].getStatus() + '</td>';
-                            html +='<td class="allowCopy"><input readonly type="text" value="'+ userAgreementList[i].getAgreementId() + '"></td>';
                             html +='</tr>';
                           });
                         $('#agreementstable tbody').html(html);
@@ -143,12 +149,16 @@
                         $("#agreementstable").removeClass("hide");
                         $(function() {
                             $('td.allowCopy input').click(function() {
-                            $(this).focus();
-                            $(this).select();
-                            document.execCommand('copy');
-                            $(".copied").text("Copied to clipboard").show().fadeOut(1200);
-                            $("#agreement_id").val($(this).val());
+                                $(this).focus();
+                                $(this).select();
+                                document.execCommand('copy');
+                                $(".copied").text("Getting Details...").show().fadeOut(1200);
+                                $("#agreement_id").val($(this).val());
+                                $('.sidebar').addClass('visible');
                             });
+                        });
+                        $('button.close').click(function() {
+                            $('.sidebar').removeClass('visible');
                         });
                     }
                 })
@@ -180,8 +190,13 @@
                             ApiUtils.info("         ");
                             ApiUtils.info("Loading eSign page");
                             var url = signingUrl.getEsignUrl() + "&" + "noChrome=true";
-                            $("#sign").attr('src', url);
-                            $("#sign").removeClass("hide");
+                            $('#sign').attr('src', url);
+                            $('.sidebar').removeClass('visible');
+                            $('.signbar').addClass('visible');
+                            $('#sign').removeClass('hide');
+                            $('button.close').click(function() {
+                                $('.signbar').removeClass('visible');
+                            });
                         }
                     }
                 })
@@ -238,6 +253,8 @@
                 })
 
         }
+        
+        
     </script>
 </head>
 
@@ -257,11 +274,12 @@
                     <p>This web app demonstrates how to send a new agreement using Adobe Sign API. This app will exectue the following tasks;</p>
                     <ul>
                         <li>Create a transient document and get transient document id.</li>
-                        <li>Get agreement info and create an agreement using the transient document.</li>
+                        <li>Create an agreement using the transient document and get agreement info.</li>
                         <li>Send the agreement.</li>
-                        <li>Display agreement details.</li>
-                        <li>Get signing url for instant signing.</li>
+                        <li>Get agreement details.</li>
+                        <li>Get signing url for in-app signing.</li>
                     </ul>
+                    <p>Read more about Adobe Sign APIs <a href="https://www.adobe.io/apis/documentcloud/sign/docs.html#!adobedocs/adobe-sign/master/README.md" target="_blank">here</a>.</p>
                 </div>
             </div>
 
@@ -272,10 +290,7 @@
                             <a class="nav-link active" id="SendAgreement-tab" data-toggle="tab" href="#SendAgreement" role="tab" aria-controls="SendAgreement" aria-selected="true">Send</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="CheckAgreement-tab" data-toggle="tab" href="#CheckAgreement" role="tab" aria-controls="CheckAgreement" aria-selected="false">Check Status</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="SignAgreement-tab" data-toggle="tab" href="#SignAgreement" role="tab" aria-controls="SignAgreement" aria-selected="false">Sign & Download</a>
+                            <a class="nav-link" id="CheckAgreement-tab" data-toggle="tab" href="#CheckAgreement" role="tab" aria-controls="CheckAgreement" aria-selected="false">My Agreements</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="console-tab" data-toggle="tab" href="#consoletab" role="tab" aria-controls="consoletab" aria-selected="false">Console</a>
@@ -288,7 +303,7 @@
                                     <form id="enquiry" action="" method="post">
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
-                                                <label for="validationCustom02">Client Email</label>
+                                                <label for="validationCustom02">Recipient Email</label>
                                                 <input type="email" class="form-control" id="email" name="email" data-validation="email" data-validation-length="min4" data-validation-error-msg="Enter a valid email" required>
                                             </div>
                                             <div class="form-group col-md-12">
@@ -333,46 +348,45 @@
                                     <div class="hide fade-in" id="loadingagreements">
                                         <span class="pendingmessage">Loading agreements</span>
                                     </div>
-                                    <span class="copied"></span>
+                                    <div class="sidebar">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="close" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <span class="copied"></span>
+                                                <form id="enquiry" action="" method="post">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="agreement_id">Agreement ID</label>
+                                                        <input type="text" class="form-control paste" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" readonly>
+                                                    </div>
+                                                </form>
+                                                <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
+                                                <button class="btn btn-default" onclick="DownloadDocumentsOfAgreement()">Download</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="signbar">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="close" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <iframe class="hide" id="sign" src="" width="100%" height="auto" frameborder="0"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-hover hide" id="agreementstable">
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Status</th>
-                                                    <th scope="col">ID</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
                                         </table>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="SignAgreement" role="tabpanel" aria-labelledby="SignAgreement-tab">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <form id="enquiry" action="" method="post">
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="agreement_id">Agreement ID</label>
-                                                <input type="text" class="form-control paste" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-default" onclick="DownloadDocumentsOfAgreement()">Download</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <iframe class="hide" id="sign" src="" width="100%" height="auto" frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>
