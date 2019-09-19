@@ -29,6 +29,7 @@
     <script src="./utils/WidgetUtils.js"></script>
     <script src="./utils/BaseUriUtils.js"></script>
     <script src="./utils/FileUtils.js"></script>
+    <script src="./utils/ReminderUtils.js"></script>
 
     <script type="text/javascript">
         var Errors = AdobeSignSdk.Errors;
@@ -39,6 +40,7 @@
         var WidgetUtils = AdobeSignSdk.WidgetUtils;
         var BaseUriUtils = AdobeSignSdk.BaseUriUtils;
         var FileUtils = AdobeSignSdk.FileUtils;
+        var ReminderUtils = AdobeSignSdk.ReminderUtils;
 
         function SendAgreementUsingTransientDocument() {
 
@@ -256,7 +258,38 @@
                 })
 
         }
-        
+
+        function SendReminderOnPendingAgreements() {
+
+            /**
+             * Entry point for this sample client program.
+             */
+            var agreementsModel = AdobeSignSdk.AgreementsModel;
+
+            ApiUtils.configureProperty(SendReminderOnPendingAgreements.name);
+
+            var agreementId = $('#agreement_id').val();
+
+            ApiUtils.info("Generating reminder for selected agreement");
+
+            //Make API call to get all the agreements of a user.
+            AgreementUtils.getAgreementInfo(agreementId)
+                .then(function(agreementInfo) {
+                    var promises = [];
+                    promises.push(ReminderUtils.createReminder(agreementId)
+                        .then(function(reminderCreationResult) {
+                        //Display agreement name and result of the operation.
+                            
+                            ApiUtils.info("Sent a reminder to the next participant in line for the agreement '" + agreementInfo.getName() + "'. Result: " + reminderCreationResult.getResult() + ".");
+                            $(".copied").text("Reminder sent succesfully").show().fadeOut(5000);
+                            
+                    }));
+                      return Promise.all(promises);
+                })
+                .catch(function(apiError) {
+                ApiUtils.logError(Errors.SEND_REMINDER_PENDING_AGREEMENT, apiError);
+            });
+        }
         
     </script>
 </head>
@@ -364,6 +397,7 @@
                                                         <input type="text" class="form-control paste" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" readonly>
                                                     </div>
                                                 </form>
+                                                <button class="btn btn-default" onclick="SendReminderOnPendingAgreements()">Remind</button>
                                                 <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
                                                 <button class="btn btn-default" onclick="DownloadDocumentsOfAgreement()">Download</button>
                                             </div>
