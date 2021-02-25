@@ -19,12 +19,11 @@
   root.AdobeSignSdk.Config = factory();
 
 }(this, function () {
-  'use strict';
 
   var Config = {
 
     //Access token to allow  the user to authorize API access. It can be generated from  the link 'https://secure.echosign.com/public/static/oauthDoc.jsp'. It must have scopes required by the corresponding samples to grant the API different levels of access to data on behalf of the end user
-    "accessToken" : "3AAABLblqZhCCRMQJ8OBCTTH8v37Ystw2lhM0bAU0m2VMxKMp9QnQfArE-uRygpDyM-dceL5BWF2viC1wcwonb3FW6uzi9JO1",
+    "accessToken" : "",
 
     //First name of the user which will be passed while creating new user
     "userFirstName" : "Dignified",
@@ -45,7 +44,7 @@
     "groupName" : "SampleGroup",
 
     //Prefix for the agreement name which will be added while creating agreement name at runtime using timestamp
-    "agreementName" : "null",
+    "agreementName" : "TemplateTest",
 
     //Prefix for the widget name which will be added while creating widget name at runtime using timestamp
     "widgetName" : "DignifiedWidget",
