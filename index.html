@@ -33,6 +33,7 @@
     <script src="./utils/BaseUriUtils.js"></script>
     <script src="./utils/FileUtils.js"></script>
     <script src="./utils/ReminderUtils.js"></script>
+    <!--
     <script type="text/javascript" src="./resources/js/Workflow.js"></script>
     <script type="text/javascript" src="./resources/js/DynamicForm.js"></script>
     <script type="text/javascript" src="./resources/js/RecipientGroup.js"></script>
@@ -43,7 +44,7 @@
     <script type="text/javascript" src="./resources/js/Deadline.js"></script>
     <script type="text/javascript" src="./resources/js/PassOption.js"></script>
     <script type="text/javascript" src="./resources/js/app.js"></script>
-
+    -->
     <script type="text/javascript">
         var Errors = AdobeSignSdk.Errors;
         var Constants = AdobeSignSdk.Constants;
@@ -441,11 +442,13 @@
                         }
                     </script>
                     <h1>Send & Sign Agreements</h1>
-                    <p>This web app is built to demonstrate some capabilites of Adobe Sign REST API.</p>
-                    <p>An Adobe Sign <a href="https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html" target="_blank" rel="nofollow">integration key</a> (with limited scopes – <b>user_login</b>, <b>agreement_read</b>, <b>agreement_write</b>, <b>agreement_send</b>, <b>library_read</b> & <b>workflow_read</b>) is required to use this application. Once the integration key has been created, please submit it in the "Integration Key" field below.</p>
-                    <p>This app will exectue the following tasks;</p>
                 </div>
                 <div class="col-md-8">
+                    <p>This web app is built to demonstrate some capabilites of Adobe Sign REST API.</p>
+                    <p>An Adobe Sign <a href="https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html" target="_blank" rel="nofollow">integration key</a> (with limited scopes – <b>user_login</b>, <b>agreement_read</b>, <b>agreement_write</b>, <b>agreement_send</b>, <b>library_read</b> & <b>workflow_read</b>) is required to use this application.</p>
+                    <p>Please submit it in the "Integration Key" field, to begin using this app.</p>
+                    <!--
+                    <p>This app will exectue the following tasks;</p>
                     <ul>
                         <li>Create an agreement using the transient document or library document<br>(NB: If a <b>Library Document ID</b> is not defined below, your most recent library document will be used to create a new agreement.)</li>
                         <li>Get agrement status</li>
@@ -454,6 +457,7 @@
                         <li>Download signed agreements</li>
                         <li>Get signing url & host embedded/in-app signing.</li>
                     </ul>
+                    -->
                     <p>Read more about Adobe Sign REST APIs <a href="https://www.adobe.io/apis/documentcloud/sign/docs.html#!adobedocs/adobe-sign/master/README.md" target="_blank">here</a>.</p>
                 </div>
                 <div class="col-md-4" id="tokenform">
