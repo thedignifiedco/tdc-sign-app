@@ -69,8 +69,8 @@
   };
 
   ApiUtils.getHeaderParams = function() {
-    var headers = {};
-    headers[ACCESS_TOKEN_KEY] = Constants.ACCESS_TOKEN;
+    var headers = {}; 
+    headers[ACCESS_TOKEN_KEY] = sessionStorage.token;
     headers[X_API_USER_KEY] = Constants.X_API_USER;
     return headers;
   };
@@ -91,6 +91,3 @@
 
   return ApiUtils;
 }));
-
-
-

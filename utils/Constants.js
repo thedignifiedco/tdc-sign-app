@@ -24,7 +24,7 @@
   var Constants = function(){};
 
   var MINUS_ONE = -1;
-  var ACCESS_TOKEN_KEY = "accessToken";
+  var ACCESS_TOKEN_KEY = [];
 
   var X_API_USER_KEY = "xApiUser";
 
@@ -71,7 +71,7 @@
   var ENV_HOST_NAME_KEY = "envHostName";
 
   //Common Parameters
-  Constants.ACCESS_TOKEN = Config[ACCESS_TOKEN_KEY] === undefined ? null : Config[ACCESS_TOKEN_KEY];
+  Constants.ACCESS_TOKEN = [];
   Constants.X_API_USER = Config[X_API_USER_KEY] === undefined ? null : Config[X_API_USER_KEY];
 
   Constants.USER_FIRST_NAME = Config[USER_FIRST_NAME_KEY] === undefined ? null : Config[USER_FIRST_NAME_KEY];

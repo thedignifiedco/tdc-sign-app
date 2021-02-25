@@ -1,13 +1,18 @@
 body {
-	font-family: Roboto, sans-serif;
+    font-family: Roboto, sans-serif;
 }
 
 .header {
     position: relative;
     background: #161616;
-	width: 100%;
+    width: 100%;
     padding: 10px 0;
     z-index: 10;
+}
+
+#google_translate_element {
+    margin-top: 20px;
+    float: right;
 }
 
 .navbar {
@@ -19,16 +24,17 @@ body {
 }
 
 @media (min-width: 992px) {
-	.navbar {
-		padding: 0;
-	}
+    .navbar {
+        padding: 0;
+    }
 }
 
 .navbar-light .navbar-toggler {
-	background-color: #ffb81c;
+    background-color: #ffb81c;
     color: #ffffff;
     border-color: #ffb81c;
 }
+
 .nav-item {
     display: block;
     float: left;
@@ -45,37 +51,46 @@ body {
     text-transform: none;
     color: #d6d6d6;
     padding: 25px 0;
-	border-bottom: 3px solid transparent;
-	margin: 0;
+    border-bottom: 3px solid transparent;
+    margin: 0;
     transition: color .15s linear;
 }
 
 @media (min-width: 992px) {
-	.navbar-light .navbar-nav .nav-link {
-		padding: 25px 10px;
-		margin: 0 10px;
-	}
+    .navbar-light .navbar-nav .nav-link {
+        padding: 25px 10px;
+        margin: 0 10px;
+    }
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
-.nav>li>a:focus,
-.nav>li>a:hover {
-	background: #161616;
-	text-decoration: none;
-	color: #ffffff;
-	border-bottom: 3px solid #ffb81c;
+.nav > li > a:focus,
+.nav > li > a:hover {
+    background: #161616;
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 3px solid #ffb81c;
 }
 
 #contact-form {
-    margin: 100px 0 50px;
+    padding: 80px 0 0;
 }
 
-#appnav {
+#tokenform {
+    padding: 10px;
+}
+
+#enquiry,
+#sendform {
+    background: #f9f9f9;
+    border-radius: 20px;
+    border: 2px solid #cccccc;
+    padding: 0 20px;
 }
 
 h1 {
-	font-family: Roboto, sans-serif;
-	font-size: 4em;
+    font-family: Roboto, sans-serif;
+    font-size: 3.8em;
     line-height: 1em;
     font-weight: 500;
     margin: 0 0 20px;
@@ -89,17 +104,27 @@ h1.logo {
     background-repeat: no-repeat;
     width: 90px;
     height: 90px;
+    background-position: center;
     font-size: 0;
     line-height: 0;
     margin: 0 auto;
 }
 
+/*
+h1.logo {
+    background-image: url("../img/custom_logo.jpg");
+    background-color: #fff;
+    width: 200px;
+    height: 60px;
+}
+*/
+
 h2 {
-	font-family: Roboto, sans-serif;
-	font-size: 1.2em;
+    font-family: Roboto, sans-serif;
+    font-size: 1.2em;
     line-height: 1em;
     font-weight: 300;
-	margin-bottom: 50px;
+    margin-bottom: 50px;
 }
 
 h3 {
@@ -120,18 +145,18 @@ legend {
     text-transform: uppercase;
     color: #373a36;
     margin: 0 0 24px;
-	border-bottom: 0;
+    border-bottom: 0;
 }
 
 .form-group {
-	position: relative;
+    position: relative;
     margin-top: 20px;
     margin-bottom: 15px;
 }
 
 label,
 .checkbox label {
-	font-family: Roboto, sans-serif;
+    font-family: Roboto, sans-serif;
     font-size: 12px;
     font-weight: 300;
     letter-spacing: 0;
@@ -140,13 +165,21 @@ label,
     margin-bottom: 0;
 }
 
+label.recipient_label {
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 textarea {
-	resize: vertical;
+    resize: vertical;
 }
 
 input.form-control,
 select.form-control,
-textarea.form-control {
+textarea.form-control,
+#merge_section .merge_input {
     width: 100%;
     background: transparent;
     font-size: 15px;
@@ -154,20 +187,24 @@ textarea.form-control {
     border: 0;
     border-bottom: 1px solid #939598;
     border-radius: 0;
+    margin-bottom: 20px;
     padding: 6px 0;
     outline: 0;
     box-sizing: border-box;
-	box-shadow: none;
+    box-shadow: none;
 }
 
 input.form-control:focus,
 select.form-control:focus,
 textarea.form-control:focus,
+#merge_section .merge_input:focus;
+
 input.form-control:hover,
 select.form-control:hover,
-textarea.form-control:hover {
+textarea.form-control:hover,
+#merge_section .merge_input:hover {
     border-bottom: 1px solid #ffb81c;
-	box-shadow: none;
+    box-shadow: none;
 }
 
 input[type=checkbox]:before {
@@ -220,7 +257,20 @@ input[type=checkbox]:not(:checked):before {
 }
 
 .checkbox input {
-	position: relative;
+    position: relative;
+}
+
+#merge_body h3 {
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 1;
+    color: #939598;
+    margin-bottom: 0;
+    border: 0;
+    margin-top: 12px;
+    padding-bottom: 0;
 }
 
 .btn-default {
@@ -242,7 +292,7 @@ input[type=checkbox]:not(:checked):before {
     margin-left: auto;
     cursor: pointer;
     z-index: 1;
-	transition: none;
+    transition: none;
 }
 
 .btn-default:hover,
@@ -250,7 +300,7 @@ input[type=checkbox]:not(:checked):before {
 .btn-default:active:hover,
 .btn-default:active:focus {
     background: #ffd069;
-	border-color: #ffd069;
+    border-color: #ffd069;
 }
 
 .btn.focus,
@@ -262,6 +312,10 @@ input[type=checkbox]:not(:checked):before {
 .btn:disabled {
     opacity: .5;
     cursor: not-allowed;
+}
+
+.halfpage {
+    margin-bottom: 50px;
 }
 
 .nav-tabs {
@@ -288,7 +342,11 @@ input[type=checkbox]:not(:checked):before {
 
 #myTabContent {
     padding: 20px 0 40px;
-	margin-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group.col-md-6.documentlist {
+    padding-right: 10px;
 }
 
 #sending,
@@ -300,7 +358,7 @@ input[type=checkbox]:not(:checked):before {
     padding: 10px;
     border: 1px solid #ffb81c;
     border-radius: 50%;
-	margin: 20px auto;
+    margin: 20px auto;
 }
 
 #sending {
@@ -321,7 +379,8 @@ input[type=checkbox]:not(:checked):before {
     margin-top: 135px;
 }
 
-#loadingagreements .pendingmessage {
+#loadingagreements .pendingmessage,
+#loadingtemplates .pendingmessage{
     margin-top: 0;
 }
 
@@ -338,7 +397,7 @@ input[type=checkbox]:not(:checked):before {
     position: absolute;
     top: 0;
     width: 270px;
-    height: 600px;
+    height: 100%;
     background: #e8ecef;
     opacity: 0;
     padding: 20px;
@@ -390,18 +449,24 @@ input[type=checkbox]:not(:checked):before {
     margin-top: -6px;
 }
 
+#reminder_section {
+    display: none !important;
+}
+
 .table-responsive {
     position: relative;
-    height: 600px;
+    height: 700px;
     overflow-y: scroll;
 }
 
-#agreementstable td.allowCopy {
+#agreementstable td.allowCopy,
+#templatestable td.allowCopy {
     position: relative;
     cursor: pointer;
 }
 
-#agreementstable td.allowCopy input {
+#agreementstable td.allowCopy input,
+#templatestable td.allowCopy input {
     position: absolute;
     top: 0;
     left: 0;
@@ -429,7 +494,7 @@ span.copied {
     padding: 10px;
     border: 1px solid #ffb81c;
     border-radius: 10px;
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 #sign {
@@ -442,18 +507,19 @@ span.copied {
 }
 
 .fade-in {
-	opacity: 1;
-	animation-name: fadeInOpacity;
-	animation-iteration-count: 1;
-	animation-timing-function: ease-in;
-	animation-duration: 2s;
+    opacity: 1;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
 }
 
 @keyframes fadeInOpacity {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
