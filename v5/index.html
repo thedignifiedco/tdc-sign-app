@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Adobe Sign App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#161616">
+    <link rel="apple-touch-icon" sizes="180x180" href="./resources/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./resources/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./resources/img/favicon-16x16.png">
+    <link rel="manifest" href="./resources/img/site.webmanifest">
+    <link rel="mask-icon" href="./resources/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./resources/css/base.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/3.0.0/superagent.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/6.0.0/validator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/adobe-sign-sdk/1.1.0/adobe-sign-sdk.min.js" integrity="sha512-SLAXxdFJLzU3v3BWbVLEARMyvj5EGfGS0aVx6URN3/m1jB8/yf0NryiTdx9FvlStZ3fUJPTKlRkzzlFIeqFeOQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="./utils/Errors.js"></script>
+    <script src="./resources/js/Config.js"></script>
+    <script src="./utils/Constants.js"></script>
+    <script src="./utils/ApiUtils.js"></script>
+    <script src="./utils/TransientDocumentUtils.js"></script>
+    <script src="./utils/LibraryDocumentUtils.js"></script>
+    <script src="./utils/AgreementUtils.js"></script>
+    <script src="./utils/WidgetUtils.js"></script>
+    <script src="./utils/BaseUriUtils.js"></script>
+    <script src="./utils/FileUtils.js"></script>
+    <script src="./utils/ReminderUtils.js"></script>
+    <!--
+    <script type="text/javascript" src="./resources/js/Workflow.js"></script>
+    <script type="text/javascript" src="./resources/js/DynamicForm.js"></script>
+    <script type="text/javascript" src="./resources/js/RecipientGroup.js"></script>
+    <script type="text/javascript" src="./resources/js/CarbonCopy.js"></script>
+    <script type="text/javascript" src="./resources/js/FileInfo.js"></script>
+    <script type="text/javascript" src="./resources/js/MergeField.js"></script>
+    <script type="text/javascript" src="./resources/js/Reminder.js"></script>
+    <script type="text/javascript" src="./resources/js/Deadline.js"></script>
+    <script type="text/javascript" src="./resources/js/PassOption.js"></script>
+    <script type="text/javascript" src="./resources/js/app.js"></script>
+    -->
+    <script type="text/javascript">
+        var Errors = AdobeSignSdk.Errors;
+        var Constants = AdobeSignSdk.Constants;
+        var ApiUtils = AdobeSignSdk.ApiUtils;
+        var TransientDocumentUtils = AdobeSignSdk.TransientDocumentUtils;
+        var LibraryDocumentUtils = AdobeSignSdk.LibraryDocumentUtils;
+        var AgreementUtils = AdobeSignSdk.AgreementUtils;
+        var WidgetUtils = AdobeSignSdk.WidgetUtils;
+        var BaseUriUtils = AdobeSignSdk.BaseUriUtils;
+        var FileUtils = AdobeSignSdk.FileUtils;
+        var ReminderUtils = AdobeSignSdk.ReminderUtils;
+
+        function SetIntegrationKey() {
+            token = $('#integration_key').val();
+            alert("Integration Key Set");
+            ApiUtils.info("Integration Key Set");
+            sessionStorage.token = token;
+            location.reload();
+        }
+
+        function SendAgreementUsingTransientDocument() {
+
+            $("#sendform").addClass("hide");
+            $("#sending").removeClass("hide");
+
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(SendAgreementUsingTransientDocument.name);
+
+            var file = document.getElementById('transientdocument').files[0];
+            var fileName = document.getElementById('transientdocument').files[0].name;
+
+            ApiUtils.info("Creating transient document using input file");
+
+
+
+            //Make API call to create transient document.
+            TransientDocumentUtils.createTransientDocument(fileName,
+                    file)
+                .then(function (transientDocumentResponse) {
+
+                    //Get the id of the transient document.
+                    var transientDocumentId = transientDocumentResponse.getTransientDocumentId();
+
+                    //List containing email ids of recipients.
+                    var recipientSetEmailList = [];
+                    recipientSetEmailList.push($('#email').val());
+
+                    var agreementName = [];
+                    agreementName.push($('#agreement_name').val());
+
+                    ApiUtils.info("Sending agreement using transient document");
+
+                    //Create agreement using the transient document.
+                    return AgreementUtils.createAgreement(recipientSetEmailList,
+                        transientDocumentId,
+                        AgreementUtils.DocumentIdentifierType.TRANSIENT_DOCUMENT_ID,
+                        agreementName);
+                })
+                .then(function (agreementCreationResponse) {
+                    ApiUtils.info("Getting agreement info for sent agreement");
+
+                    //Get agreement info using the agreement id.
+                    return AgreementUtils.getAgreementInfo(agreementCreationResponse.getAgreementId());
+                })
+                .then(function (agreementInfo) {
+
+                    //Display agreement details
+                    ApiUtils.info("Agreement ID = " + agreementInfo.getAgreementId());
+                    ApiUtils.info("Agreement Name = " + agreementInfo.getName());
+                    ApiUtils.info("Agreement Status = " + agreementInfo.getStatus());
+                    $("#sending").addClass("hide");
+                    $("#sendresult").removeClass("hide");
+                    $('#agreement_id').val(agreementInfo.getAgreementId());
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logError(Errors.SEND_AGREEMENT_USING_TRANSIENT_DOCUMENT, apiError);
+                });
+
+        }
+        
+        function SendAgreementUsingLibraryDocument() {
+
+            $("#sendform").addClass("hide");
+            $("#sending").removeClass("hide");
+
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(SendAgreementUsingLibraryDocument.name);
+
+            ApiUtils.info("Getting id of first library document of the user");
+
+            //Get the id of the first library document of the user.
+            LibraryDocumentUtils.getFirstLibraryDocumentId()
+                .then(function (libraryDocumentId) {
+
+                    if (!libraryDocumentId) {
+                        ApiUtils.logError(Errors.NO_LIBRARY_DOCUMENTS);
+                    } else {
+                        //List containing email ids of recipients
+                        var recipientSetEmailList = [];
+                        recipientSetEmailList.push($('#email').val());
+                        ApiUtils.info("Recipient Email Set");
+
+                        var agreementName = [];
+                        agreementName.push($('#agreement_name').val());
+                        ApiUtils.info("Agreement Name Set");
+
+                        template_id = $('#template_id').val();
+                        if (template_id !== "") {
+                            var libraryId = [];
+                            libraryId.push(template_id);
+                            libraryDocumentId = libraryId;
+                            ApiUtils.info("Template ID Set");
+                        }
+
+                        //Create agreement using the library document.
+                        return AgreementUtils.createAgreement(recipientSetEmailList,
+                            libraryDocumentId,
+                            AgreementUtils.DocumentIdentifierType.LIBRARY_DOCUMENT_ID,
+                            agreementName);
+                    }
+                })
+                .then(function (agreementCreationResponse) {
+
+                    //Get agreement info using the agreement id.
+                    return AgreementUtils.getAgreementInfo(agreementCreationResponse.getAgreementId());
+
+                })
+                .then(function (agreementInfo) {
+
+                    //Display agreement details
+                    ApiUtils.info("Agreement ID = " + agreementInfo.getAgreementId());
+                    ApiUtils.info("Agreement Name = " + agreementInfo.getName());
+                    ApiUtils.info("Agreement Status = " + agreementInfo.getStatus());
+                    $("#sending").addClass("hide");
+                    $("#sendresult").removeClass("hide");
+                    $('#agreement_id').val(agreementInfo.getAgreementId());
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logError(Errors.SEND_AGREEMENT_USING_LIBRARY_DOCUMENT, apiError);
+                })
+        }
+
+        function GetStatusOfAgreements() {
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(GetStatusOfAgreements.name);
+
+            // Set the number of agreements for which status is to be logged.
+            var agreementCountLimit = Constants.AGREEMENT_COUNT_LIMIT;
+
+            $("#loadingagreements").removeClass("hide");
+            ApiUtils.info("Setting BaseUri");
+
+            BaseUriUtils.setBaseUri()
+                .then(function () {
+                    ApiUtils.info("Getting all agreements for the user");
+
+                    //Make API call to get all the agreements of a user.
+                    return AgreementUtils.getAllAgreements();
+                })
+                .then(function (userAgreements) {
+                    ApiUtils.info("Displaying details of last 5 agreements");
+                    ApiUtils.info("         ");
+
+                    //Display details of latest agreement.
+                    var userAgreementList = userAgreements.getUserAgreementList();
+                    for (var i = 0; i < userAgreementList.length; i++) {
+                        if (agreementCountLimit === 0) {
+                            break;
+                        }
+
+                        //Display agreement details
+                        ApiUtils.info("Agreement ID = " + userAgreementList[i].getAgreementId());
+                        ApiUtils.info("Agreement Name = " + userAgreementList[i].getName());
+                        ApiUtils.info("Agreement Status = " + userAgreementList[i].getStatus());
+                        ApiUtils.info("         ");
+
+                        agreementCountLimit--;
+
+                        var html = '';
+                        $.each(userAgreementList, function (i, item) {
+                            html += '<tr>';
+                            html += '<td class="allowCopy">' + userAgreementList[i].getName() + '<br><input readonly type="text" value="' + userAgreementList[i].getAgreementId() + '"></td>';
+                            html += '<td>' + userAgreementList[i].getStatus() + '</td>';
+                            html += '</tr>';
+                        });
+                        $('#agreementstable tbody').html(html);
+                        $("#loadingagreements").addClass("hide");
+                        $("#agreementstable").removeClass("hide");
+                        $(function () {
+                            $('td.allowCopy input').click(function () {
+                                $(this).focus();
+                                $(this).select();
+                                document.execCommand('copy');
+                                $(".copied").text("Getting Details...").show().fadeOut(1200);
+                                $("#agreement_id").val($(this).val());
+                                $('.sidebar').addClass('visible');
+                            });
+                        });
+                        $('button.close').click(function () {
+                            $('.sidebar').removeClass('visible');
+                        });
+                    }
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logError(Errors.GET_AGREEMENT_STATUS, apiError);
+                })
+
+        }
+
+        function GetSigningUrl() {
+
+            /**
+             * Entry point for this sample client program.
+             */
+
+            var agreementId = $('#agreement_id').val();
+
+            ApiUtils.info("Getting signing url for agreement");
+
+            //Get agreement id.
+            AgreementUtils.getSigningUrl(agreementId)
+
+                .then(function (signingUrlSetInfos) {
+                    for (var i = 0; i < signingUrlSetInfos.length; i++) {
+                        var signingUrls = signingUrlSetInfos[i].getSigningUrls();
+                        for (var j = 0; j < signingUrls.length; j++) {
+                            var signingUrl = signingUrls[j];
+                            ApiUtils.info("Signing url: " + signingUrl.getEsignUrl());
+                            ApiUtils.info("         ");
+                            ApiUtils.info("Loading eSign page");
+                            var url = signingUrl.getEsignUrl() + "&" + "noChrome=true";
+                            $('#sign').attr('src', url);
+                            $('.sidebar').removeClass('visible');
+                            $('.signbar').addClass('visible');
+                            $('#sign').removeClass('hide');
+                            $('button.close').click(function () {
+                                $('.signbar').removeClass('visible');
+                            });
+                        }
+                    }
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logAndThrowError(Errors.GET_SIGNING_URL, apiError);
+                });
+        }
+
+        function DownloadDocumentsOfAgreement() {
+
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(DownloadDocumentsOfAgreement.name);
+
+            var agreementId = $('#agreement_id').val();
+
+            ApiUtils.info("Creating/Fetching Agreement with given ID");
+
+            ApiUtils.info("Fetching list of documents associated with the specified agreement");
+
+            //Fetch list of documents associated with the specified agreement.
+            AgreementUtils.getAllDocuments(agreementId)
+                .then(function (agreementDocuments) {
+                    var agreementDocumentsList = agreementDocuments.getDocuments();
+
+                    var promises = [];
+                    for (var i = 0; i < agreementDocumentsList.length; i++) {
+                        var document = agreementDocumentsList[i];
+                        ApiUtils.info("Downloading all the documents of the given agreement");
+
+                        //Download all the documents of the given agreement
+                        promises.push(AgreementUtils.downloadDocuments(agreementId,
+                                document.getDocumentId())
+                            .then(function (docStream) {
+
+                                //Generate a running file name for storing locally.
+                                var fileName = document.getName() + "_signed_" + ".pdf";
+
+                                var type = "application/pdf";
+
+                                //Save the documents to file.
+                                if (docStream != null) {
+                                    return FileUtils.saveToFile(docStream,
+                                        type,
+                                        fileName);
+                                }
+                            }));
+                    }
+                    return Promise.all(promises);
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logError(Errors.DOWNLOAD_DOCUMENT, apiError);
+                })
+
+        }
+        
+        function SendReminderOnPendingAgreements() {
+
+
+            var agreementsModel = AdobeSignSdk.AgreementsModel;
+
+            ApiUtils.configureProperty(SendReminderOnPendingAgreements.name);
+
+            var agreementId = $('#agreement_id').val();
+
+            ApiUtils.info("Generating reminder for selected agreement");
+
+            //Make API call to get all the agreements of a user.
+            AgreementUtils.getAgreementInfo(agreementId)
+                .then(function (agreementInfo) {
+                    var promises = [];
+                    promises.push(ReminderUtils.createReminder(agreementId)
+                        .then(function (reminderCreationResult) {
+                            //Display agreement name and result of the operation.
+
+                            ApiUtils.info("Sent a reminder to the next participant in line for the agreement '" + agreementInfo.getName() + "'. Result: " + reminderCreationResult.getResult() + ".");
+                            $(".copied").text("Reminder sent succesfully").show().fadeOut(5000);
+
+                        }));
+                    return Promise.all(promises);
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logError(Errors.SEND_REMINDER_PENDING_AGREEMENT, apiError);
+                });
+        }
+        
+        function GetLibraryDocuments() {
+
+            /**
+             * Entry point for this sample client program.
+             */
+            ApiUtils.configureProperty(GetLibraryDocuments.name);
+            $("#loadingtemplates").removeClass("hide");
+            ApiUtils.info("Getting all library documents of the user");
+
+            //Get the id of the first library document of the user.
+            LibraryDocumentUtils.getLibraryDocuments()
+                .then(function (documentLibraryItems) {
+                    var documentLibraryItemList = documentLibraryItems.getLibraryDocumentList();
+                    for (var i = 0; i < documentLibraryItemList.length; i++) {
+                        var documentLibraryItem = documentLibraryItemList[i];
+
+                        var html = '';
+                        $.each(documentLibraryItemList, function (i, item) {
+                            html += '<tr>';
+                            html += '<td class="allowCopy">' + documentLibraryItemList[i].getName() + '<br><input readonly type="text" value="' + documentLibraryItemList[i].getLibraryDocumentId() + '"></td>';
+                            html += '<td>' + documentLibraryItemList[i].getScope() + '</td>';
+                            html += '</tr>';
+                        });
+                        $('#templatestable tbody').html(html);
+                        $("#loadingtemplates").addClass("hide");
+                        $("#templatestable").removeClass("hide");
+                        $(function () {
+                            $('td.allowCopy input').click(function () {
+                                $(this).focus();
+                                $(this).select();
+                                document.execCommand('copy');
+                                $(".copied").text("Getting Details...").show().fadeOut(1200);
+                                $("#templates_id").val($(this).val());
+                                $('.sidebar').addClass('visible');
+                            });
+                        });
+                    }
+                })
+                .catch(function (apiError) {
+                    ApiUtils.logAndThrowError(Errors.GET_LIBRARY_DOCUMENTS, apiError);
+                })
+        }
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="col-md-12">
+            <div class="container">
+                <h1 class="logo">Adobe Sign</h1>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <div class="row halfpage" id="contact-form">
+                <div class="col-md-12">
+                    <div id="google_translate_element"></div>
+                    <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'en'
+                            }, 'google_translate_element');
+                        }
+                    </script>
+                    <h1>Send & Sign Agreements</h1>
+                </div>
+                <div class="col-md-8">
+                    <p>This web app is built to demonstrate some capabilites of Adobe Sign REST API.</p>
+                    <p>An Adobe Sign <a href="https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html" target="_blank" rel="nofollow">integration key</a> (with limited scopes – <b>user_login</b>, <b>agreement_read</b>, <b>agreement_write</b>, <b>agreement_send</b>, <b>library_read</b> & <b>workflow_read</b>) is required to use this application.</p>
+                    <p>Please submit it in the "Integration Key" field, to begin using this app.</p>
+                    <!--
+                    <p>This app will exectue the following tasks;</p>
+                    <ul>
+                        <li>Create an agreement using the transient document or library document<br>(NB: If a <b>Library Document ID</b> is not defined below, your most recent library document will be used to create a new agreement.)</li>
+                        <li>Get agrement status</li>
+                        <li>Send list of templates</li>
+                        <li>Send manual reminders</li>
+                        <li>Download signed agreements</li>
+                        <li>Get signing url & host embedded/in-app signing.</li>
+                    </ul>
+                    -->
+                    <p>Read more about Adobe Sign REST APIs <a href="https://www.adobe.io/apis/documentcloud/sign/docs.html#!adobedocs/adobe-sign/master/README.md" target="_blank">here</a>.</p>
+                </div>
+                <div class="col-md-4" id="tokenform">
+                    <div id="enquiry">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="validationCustom02">Integration Key</label>
+                                <input type="password" class="form-control" id="integration_key" name="integration_key" data-validation-length="min4" data-validation-error-msg="Enter your Adobe Sign Integration key" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-default" onclick="SetIntegrationKey()">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row halfpage">
+                <div class="col-md-12" id="appnav">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="SendAgreement-tab" data-toggle="tab" href="#SendAgreement" role="tab" aria-controls="SendAgreement" aria-selected="true">Send</a>
+                        </li>
+                        <!--
+                        <li class="nav-item">
+                            <a class="nav-link" id="Workflow-tab" data-toggle="tab" href="#Workflow" role="tab" aria-controls="Workflow" aria-selected="true">Workflow</a>
+                        </li>
+                        -->
+                        <li class="nav-item">
+                            <a class="nav-link" id="CheckAgreement-tab" data-toggle="tab" href="#CheckAgreement" role="tab" aria-controls="CheckAgreement" aria-selected="false">Agreements</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="CheckTemplates-tab" data-toggle="tab" href="#CheckTemplates" role="tab" aria-controls="CheckTemplates" aria-selected="false">Templates</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="console-tab" data-toggle="tab" href="#consoletab" role="tab" aria-controls="consoletab" aria-selected="false">Console</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="SendAgreement" role="tabpanel" aria-labelledby="SendAgreement-tab">
+                            <div class="row">
+                                <div class="col-md-12" id="sendform">
+                                    <form action="" method="post">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="validationCustom02">Recipient Email</label>
+                                                <input type="email" class="form-control" id="email" name="email" data-validation="email" data-validation-length="min4" data-validation-error-msg="Enter a valid email" required>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="validationCustom01">Agreement Name</label>
+                                                <input type="text" class="form-control" id="agreement_name" name="agreement_name" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" required>
+                                            </div>
+                                            <div class="form-group col-md-6 documentlist">
+                                                <select class="custom-select" name="document_Option" id="document_Option">
+                                                    <option selected>Choose Document</option>
+                                                    <option value="1">Transient Document</option>
+                                                    <option value="2">Library Document</option>
+                                                </select>
+                                                <script>
+                                                    $('#document_Option').on('change', function () {
+                                                        var documentoption = $(this).val();
+
+                                                        if (documentoption == '1') {
+                                                            $(".templatebtn").addClass("hide");
+                                                            $(".transientbtn").removeClass("hide");
+                                                        }
+
+                                                        if (documentoption == '2') {
+                                                            $(".transientbtn").addClass("hide");
+                                                            $(".templatebtn").removeClass("hide");
+                                                        }
+                                                    });
+                                                </script>
+                                            </div>
+                                            <div class="form-group col-md-12 templatebtn hide">
+                                                <label for="validationCustom01">Library Document ID</label>
+                                                <input type="text" class="form-control" id="template_id" name="template_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required">
+                                            </div>
+                                            <div class="form-group col-md-6 transientbtn hide">
+                                                <input type="file" class="custom-file-input" id="transientdocument" />
+                                                <label class="custom-file-label" for="transientdocument">Choose document</label>
+                                                <script>
+                                                    $('#transientdocument').on('change', function () {
+                                                        //get the file name
+                                                        var fileName = $(this).val();
+                                                        //replace the "Choose a file" label
+                                                        $(this).next('.custom-file-label').html(fileName);
+                                                    })
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-default transientbtn hide" onclick="SendAgreementUsingTransientDocument()">Send Agreement</button>
+                                            <button class="btn btn-default templatebtn hide" onclick="SendAgreementUsingLibraryDocument()">Send Agreement</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="hide fade-in" id="sending">
+                                        <span class="pendingmessage">Creating agreement</span>
+                                    </div>
+                                    <div class="hide fade-in" id="sendresult">
+                                        <span class="successmessage">Out for signature</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="tab-pane fade" id="Workflow" role="tabpanel" aria-labelledby="Workflow-tab">
+                            <div class="row">
+                                <div class="col-md-12" id="workflow_form">
+                                    <div id="workflow_form_top">
+                                        <div id="workflow_form_top_wrapper">
+                                            <div id="workflow_selector">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="workflow_dropdown" id="workflow_dropdown_label">Select Workflow</label>
+                                                        <select class="form-control" id="workflow_dropdown"></select>
+                                                    </div>
+                                                    <button type="button" class="btn btn-default" id="option_submit_button" onclick="runWorkflow()">Select
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="workflow_form_bottom">
+                                        <div id="workflow_form_bot_wrapper" class="form_hidden">
+                                            <div id="dynamic_form">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <form id="recipient_form" enctype="multipart/form-data">
+                                                            <div class="col-lg-12" id="bottom_form_top">
+                                                                <div class="form_hidden" id="instruction_section"></div>
+                                                                <div class="form_hidden" id="recipient_section"></div>
+                                                                <div class="form_hidden" id="cc_section"></div>
+                                                            </div>
+                                                            <div class="col-lg-12" id="bottom_form_bottom">
+                                                                <div class="row">
+                                                                    <div class="col-lg-7">
+                                                                        <div class="form_hidden" id="agreement_section"></div>
+                                                                        <div class="form_hidden" id="message_section"></div>
+                                                                        <div class="form_hidden" id="upload_section"></div>
+                                                                        <div class="form_hidden" id="merge_section"></div>
+                                                                    </div>
+                                                                    <div class="col-lg-5">
+                                                                        <div class="option_wrapper">
+                                                                            <div id="options" class="col-lg-12">
+                                                                                <div class="form_hidden" id="send_options_section"></div>
+                                                                                <div class="form_hidden" id="deadline_section"></div>
+                                                                                <div class="form_hidden" id="reminder_section"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12" id="form_submit">
+                                                                <div class="form_hidden" id="button_section"></div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+                        <div class="tab-pane fade" id="CheckAgreement" role="tabpanel" aria-labelledby="CheckAgreement-tab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-default" onclick="GetStatusOfAgreements()">Get Status of Agreements</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="hide fade-in" id="loadingagreements">
+                                        <span class="pendingmessage">Loading agreements</span>
+                                    </div>
+                                    <div class="sidebar">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="close" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <span class="copied"></span>
+                                                <form method="post">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="agreement_id">Agreement ID</label>
+                                                        <input type="text" class="form-control paste" id="agreement_id" name="agreement_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" readonly>
+                                                    </div>
+                                                </form>
+                                                <button class="btn btn-default" onclick="SendReminderOnPendingAgreements()">Remind</button>
+                                                <button class="btn btn-default" onclick="GetSigningUrl()">Sign</button>
+                                                <button class="btn btn-default" onclick="DownloadDocumentsOfAgreement()">Download</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="signbar">
+                                        <button type="button" class="close" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <iframe class="hide" id="sign" src="" width="100%" height="600px" frameborder="0"></iframe>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover hide" id="agreementstable">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col">Agreement</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="CheckTemplates" role="tabpanel" aria-labelledby="CheckTemplates-tab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-default" onclick="GetLibraryDocuments()">Get Templates</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="hide fade-in" id="loadingtemplates">
+                                        <span class="pendingmessage">Loading Templates</span>
+                                    </div>
+                                    <div class="sidebar">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="close" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <span class="copied"></span>
+                                                <form method="post">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="templates_id">Library Document ID</label>
+                                                        <input type="text" class="form-control paste" id="templates_id" name="templates_id" data-validation="alphanumeric" data-validation-allowing="-_" data-validation-length="min4" data-validation-error-msg="Required" readonly>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover hide" id="templatestable">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col">Document</th>
+                                                    <th scope="col">Scope</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="consoletab" role="tabpanel" aria-labelledby="console-tab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="result"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
