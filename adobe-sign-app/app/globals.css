@@ -139,7 +139,8 @@ a {
   overflow: hidden;
 }
 
-.tab-content button {
+.tab-content button,
+.integrationKeyForm button {
   width: 100%;
 }
 

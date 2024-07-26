@@ -35,7 +35,7 @@ export default function Home() {
           <p>An Adobe Sign <a href="https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html" target="_blank" rel="nofollow">integration key</a> (with limited scopes – <b>user_login</b>, <b>agreement_read</b>, <b>agreement_write</b>, <b>agreement_send</b>, <b>library_read</b> & <b>workflow_read</b>) is required to use this application.</p>
           <p>Submit your integration key, to begin using this app.</p>
         </div>
-        <div className="col-md-3">
+        <div className="integrationKeyForm col-md-3">
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="integrationKey" className="d-grid gap-2">
               <Form.Label>Integration Key</Form.Label>

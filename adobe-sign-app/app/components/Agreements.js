@@ -69,8 +69,8 @@ export default function Agreements() {
       await api.post(
         `/agreements/${selectedAgreement.id}/reminders`,
         {
-            recipientParticipantIds: [participantId],
-            status: 'ACTIVE'
+          recipientParticipantIds: [participantId],
+          status: 'ACTIVE'
         },
         {
           headers: {
@@ -98,7 +98,8 @@ export default function Agreements() {
           },
         }
       );
-      setIframeUrl(response.data.signingUrlSetInfos[0].signingUrls[0].esignUrl);
+      const signingUrl = response.data.signingUrlSetInfos[0].signingUrls[0].esignUrl;
+      setIframeUrl(`${signingUrl}&noChrome=true`);
     } catch (error) {
       setMessage({ type: 'danger', text: error.response?.data?.message || error.message || 'An error occurred' });
     }
@@ -150,7 +151,7 @@ export default function Agreements() {
 
   return (
     <>
-      <Button block variant="primary" onClick={fetchAgreements} disabled={loading}>
+      <Button variant="primary" onClick={fetchAgreements} disabled={loading}>
         {loading ? <Spinner animation="border" size="sm" /> : 'Get All Agreements'}
       </Button>
 
@@ -177,45 +178,45 @@ export default function Agreements() {
         </tbody>
       </Table>
 
-<Modal dialog centered show={showModal} onHide={handleCloseModal} size="lg">
-  <Modal.Header closeButton>
-    <Modal.Title>Agreement Actions</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Row>
-        <Col className="d-grid gap-2">
-            <Button variant="warning" onClick={handleSendReminder}>
+      <Modal dialog centered show={showModal} onHide={handleCloseModal} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Agreement Actions</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col className="d-grid gap-2">
+              <Button variant="warning" onClick={handleSendReminder}>
                 Send Reminder
-            </Button>
-        </Col>
-        <Col className="d-grid gap-2">
-            <Button variant="primary" onClick={handleSign}>
+              </Button>
+            </Col>
+            <Col className="d-grid gap-2">
+              <Button variant="primary" onClick={handleSign}>
                 Sign
-            </Button>
-        </Col>
-        <Col className="d-grid gap-2">
-            <Button variant="success" onClick={handleDownload}>
+              </Button>
+            </Col>
+            <Col className="d-grid gap-2">
+              <Button variant="success" onClick={handleDownload}>
                 Download
-            </Button>
-        </Col>
-    </Row>
-    {message && (
-        <Alert variant={message.type} className="mt-3">
-          {message.text}
-        </Alert>
-      )}
-    {iframeUrl && (
-      <iframe
-        src={iframeUrl}
-        className="sign_window"
-        title="Sign Agreement"
-        width="100%"
-        height="400px"
-        style={{ border: 'none' }}
-      />
-    )}
-  </Modal.Body>
-</Modal>
+              </Button>
+            </Col>
+          </Row>
+          {message && (
+            <Alert variant={message.type} className="mt-3">
+              {message.text}
+            </Alert>
+          )}
+          {iframeUrl && (
+            <iframe
+              src={iframeUrl}
+              className="sign_window"
+              title="Sign Agreement"
+              width="100%"
+              height="400px"
+              style={{ border: 'none' }}
+            />
+          )}
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
