@@ -47,7 +47,7 @@ export default function Home() {
               />
             </Form.Group>
             <Button variant="primary" type="submit" className="mt-2">
-              Set Integration Key
+              Submit
             </Button>
           </Form>
           {showAlert && <Alert variant="success" className="mt-3">{alertMessage}</Alert>}

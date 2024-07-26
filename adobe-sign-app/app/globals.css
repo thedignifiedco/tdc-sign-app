@@ -128,20 +128,19 @@ h1.logo {
   margin: 50px auto;
 }
 
-a {
-  color: #939598;
-  text-decoration: none;
+.integrationKeyForm {
+  margin-bottom: 20px;
+}
+
+.integrationKeyForm button,
+.tab-content button {
+  width: 100%;
 }
 
 .tab-content {
   padding: 20px 0;
   margin-bottom: 20px;
   overflow: hidden;
-}
-
-.tab-content button,
-.integrationKeyForm button {
-  width: 100%;
 }
 
 .tab-content form > div {
