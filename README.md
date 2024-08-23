@@ -22,7 +22,7 @@ Please submit it in the "Integration Key" field to begin using this app.
 1. Clone the repository:
     ```bash
     git clone https://github.com/thedignifiedco/tdc-sign-app.git
-    cd adobe-sign-app
+    cd tdc-sign-app
     ```
 
 2. Install dependencies:
