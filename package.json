@@ -13,7 +13,7 @@
     "bootstrap": "^5.3.3",
     "express-session": "^1.18.0",
     "form-data": "^4.0.0",
-    "formidable": "^3.5.1",
+    "formidable": "^3.5.4",
     "fs": "^0.0.1-security",
     "next": "14.2.5",
     "next-session": "^4.0.5",
